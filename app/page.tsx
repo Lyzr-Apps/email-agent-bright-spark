@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { callAIAgent } from '@/lib/aiAgent'
-import { getScheduleById, pauseSchedule, resumeSchedule, runScheduleNow, getScheduleRuns } from '@/lib/scheduler'
+import { getSchedule, pauseSchedule, resumeSchedule, triggerScheduleNow, getScheduleLogs, cronToHuman } from '@/lib/scheduler'
 import { FiSettings, FiMail, FiCheckCircle, FiAlertCircle, FiClock, FiPlay, FiPause, FiRefreshCw } from 'react-icons/fi'
 import { Loader2 } from 'lucide-react'
 
@@ -346,9 +346,16 @@ export default function Home() {
 
   const loadScheduleInfo = async () => {
     try {
-      const info = await getScheduleById(SCHEDULE_ID)
-      if (info) {
-        setScheduleInfo(info)
+      const result = await getSchedule(SCHEDULE_ID)
+      if (result?.success && result?.schedule) {
+        // Map the schedule data to our interface
+        setScheduleInfo({
+          id: result.schedule.id,
+          status: result.schedule.is_active ? 'active' : 'paused',
+          next_run: result.schedule.next_run_time || 'Not scheduled',
+          cron_expression: result.schedule.cron_expression,
+          timezone: result.schedule.timezone
+        })
       }
     } catch (error) {
       console.error('Failed to load schedule info:', error)
@@ -357,8 +364,15 @@ export default function Home() {
 
   const loadScheduleRuns = async () => {
     try {
-      const runs = await getScheduleRuns(SCHEDULE_ID, 10)
-      if (Array.isArray(runs)) {
+      const result = await getScheduleLogs(SCHEDULE_ID, { limit: 10 })
+      if (result?.success && Array.isArray(result?.executions)) {
+        // Map execution logs to schedule runs format
+        const runs = result.executions.map(exec => ({
+          id: exec.id,
+          status: exec.success ? 'success' : 'failed',
+          started_at: exec.executed_at,
+          completed_at: exec.executed_at
+        }))
         setScheduleRuns(runs)
       }
     } catch (error) {
@@ -411,11 +425,13 @@ export default function Home() {
   const handleRunScheduleNow = async () => {
     setScheduleLoading(true)
     try {
-      await runScheduleNow(SCHEDULE_ID)
-      setTimeout(() => {
-        loadScheduleRuns()
-        handleRunNow()
-      }, 2000)
+      const result = await triggerScheduleNow(SCHEDULE_ID)
+      if (result?.success) {
+        setTimeout(() => {
+          loadScheduleRuns()
+          handleRunNow()
+        }, 2000)
+      }
     } catch (error) {
       console.error('Failed to run schedule:', error)
     } finally {
