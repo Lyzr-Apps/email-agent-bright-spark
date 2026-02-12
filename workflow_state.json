@@ -1,0 +1,71 @@
+{
+  "agents": [
+    {
+      "agent_id": "698dad822332705a73b4cbea",
+      "name": "Email Task Agent",
+      "type": "text_with_file_output",
+      "description": "Fetches yesterday's emails, analyzes content to extract action items, deadlines, and follow-ups, then compiles a prioritized task list and sends it via email",
+      "role": "Email Analysis and Task Management Specialist",
+      "model": "gpt-4.1",
+      "provider": "OpenAI",
+      "temperature": 0.3,
+      "top_p": 1,
+      "tools": [
+        {
+          "tool_name": "gmail",
+          "tool_source": "composio",
+          "actions": ["GMAIL_FETCH_EMAILS", "GMAIL_SEND_EMAIL"]
+        }
+      ],
+      "file_output": true,
+      "response_schema_file": "response_schemas/email_task_agent_response.json"
+    }
+  ],
+  "schedules": [
+    {
+      "schedule_id": "698dad87ebe6fd87d1dcc170",
+      "agent_id": "698dad822332705a73b4cbea",
+      "agent_name": "Email Task Agent",
+      "cron_expression": "30 16 * * *",
+      "timezone": "America/New_York",
+      "message": "Analyze yesterday's emails and send daily task list",
+      "frequency_description": "Daily at 4:30 PM EST",
+      "is_active": true,
+      "next_run_time": "2026-02-12T16:30:00-05:00"
+    }
+  ],
+  "workflow": {
+    "nodes": [
+      {
+        "id": "input_node",
+        "type": "Input",
+        "label": "Scheduled Trigger (Daily 4:30 PM)",
+        "nodeCategory": "input"
+      },
+      {
+        "id": "email_task_agent",
+        "type": "Agent",
+        "label": "Email Task Agent",
+        "nodeCategory": "agent"
+      },
+      {
+        "id": "output_node",
+        "type": "Output",
+        "label": "Daily Task List Output",
+        "nodeCategory": "end"
+      }
+    ],
+    "edges": [
+      {
+        "source": "input_node",
+        "target": "email_task_agent"
+      },
+      {
+        "source": "email_task_agent",
+        "target": "output_node"
+      }
+    ]
+  },
+  "created_at": "2026-02-12T10:37:59Z",
+  "project_type": "scheduled_email_agent"
+}

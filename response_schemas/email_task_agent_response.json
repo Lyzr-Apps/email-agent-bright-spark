@@ -1,0 +1,52 @@
+{
+  "agent_name": "Email Task Agent",
+  "agent_id": "698dad822332705a73b4cbea",
+  "description": "Fetches yesterday's emails, analyzes content to extract action items, deadlines, and follow-ups, then compiles a prioritized task list and sends it via email",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "result": {
+      "tasks": [
+        {
+          "description": "string",
+          "priority": "string",
+          "sourceEmail": {
+            "subject": "string",
+            "sender": "string"
+          },
+          "deadline": "string"
+        }
+      ],
+      "emailsProcessed": "number",
+      "generatedAt": "string",
+      "status": "string"
+    }
+  },
+  "example_response": {
+    "result": {
+      "tasks": [
+        {
+          "description": "sample string",
+          "priority": "sample string",
+          "sourceEmail": {
+            "subject": "sample string",
+            "sender": "sample string"
+          },
+          "deadline": "sample string"
+        }
+      ],
+      "emailsProcessed": 0,
+      "generatedAt": "sample string",
+      "status": "sample string"
+    }
+  },
+  "has_module_outputs": true,
+  "module_outputs_example": {
+    "artifact_files": [
+      {
+        "file_url": "https://example.com/file.pdf"
+      }
+    ]
+  }
+}
