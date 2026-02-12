@@ -153,18 +153,23 @@ function TaskCard({ task, expanded, onToggle }: { task: TaskItem; expanded: bool
 
 function SettingsModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [email, setEmail] = useState('')
-  const [time, setTime] = useState('16:30')
+  const [time, setTime] = useState('16:40')
 
   const handleSave = () => {
+    if (!email || !email.includes('@')) {
+      alert('Please enter a valid email address')
+      return
+    }
     localStorage.setItem('recipientEmail', email)
     localStorage.setItem('scheduledTime', time)
+    alert('Settings saved! The agent will now send task summaries to ' + email)
     onOpenChange(false)
   }
 
   useEffect(() => {
     if (open) {
       setEmail(localStorage.getItem('recipientEmail') || '')
-      setTime(localStorage.getItem('scheduledTime') || '16:30')
+      setTime(localStorage.getItem('scheduledTime') || '16:40')
     }
   }, [open])
 
@@ -198,7 +203,14 @@ function SettingsModal({ open, onOpenChange }: { open: boolean; onOpenChange: (o
               onChange={(e) => setTime(e.target.value)}
               className="bg-background border-input text-foreground"
             />
-            <p className="text-xs text-muted-foreground">Timezone: America/New_York (EST/EDT)</p>
+            <p className="text-xs text-muted-foreground">Timezone: Asia/Kolkata (IST) - Currently set to 4:40 PM daily</p>
+          </div>
+          <div className="space-y-2 p-3 bg-accent/10 rounded-md border border-accent/30">
+            <p className="text-sm text-foreground font-medium">Important:</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Enter the email address where you want to receive your daily task summaries.
+              The agent will analyze your emails from the past 24 hours and send a prioritized task list to this address.
+            </p>
           </div>
           <div className="flex justify-end gap-3 pt-4">
             <Button variant="outline" onClick={() => onOpenChange(false)} className="border-border">
@@ -389,7 +401,17 @@ export default function Home() {
   const handleRunNow = async () => {
     setLoading(true)
     try {
-      const result = await callAIAgent("Analyze yesterday's emails and send daily task list", AGENT_ID)
+      // Get recipient email from settings
+      const recipientEmail = localStorage.getItem('recipientEmail') || ''
+
+      if (!recipientEmail) {
+        alert('Please configure your recipient email in Settings first')
+        setLoading(false)
+        return
+      }
+
+      const message = `Analyze yesterday's emails and send daily task list to ${recipientEmail}. Make sure to use GMAIL_SEND_EMAIL to send the compiled task list to this email address.`
+      const result = await callAIAgent(message, AGENT_ID)
 
       if (result?.success && result?.response?.result) {
         const agentData = result.response.result
