@@ -23,15 +23,15 @@
   ],
   "schedules": [
     {
-      "schedule_id": "698daf7cebe6fd87d1dcc173",
+      "schedule_id": "698db28debe6fd87d1dcc178",
       "agent_id": "698dad822332705a73b4cbea",
       "agent_name": "Email Task Agent",
-      "cron_expression": "30 16 * * *",
+      "cron_expression": "40 16 * * *",
       "timezone": "Asia/Kolkata",
       "message": "Analyze yesterday's emails and send daily task list",
-      "frequency_description": "Daily at 4:30 PM IST",
+      "frequency_description": "Daily at 4:40 PM IST",
       "is_active": true,
-      "next_run_time": "2026-02-12T16:30:00+05:30"
+      "next_run_time": "2026-02-12T16:40:00+05:30"
     }
   ],
   "workflow": {
@@ -39,7 +39,7 @@
       {
         "id": "input_node",
         "type": "Input",
-        "label": "Scheduled Trigger (Daily 4:30 PM)",
+        "label": "Scheduled Trigger (Daily 4:40 PM)",
         "nodeCategory": "input"
       },
       {

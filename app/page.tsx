@@ -16,7 +16,7 @@ import { FiSettings, FiMail, FiCheckCircle, FiAlertCircle, FiClock, FiPlay, FiPa
 import { Loader2 } from 'lucide-react'
 
 const AGENT_ID = '698dad822332705a73b4cbea'
-const SCHEDULE_ID = '698daf7cebe6fd87d1dcc173'
+const SCHEDULE_ID = '698db28debe6fd87d1dcc178'
 
 // Theme colors (Heritage Premium)
 const THEME_VARS = {
@@ -522,8 +522,9 @@ export default function Home() {
   }
 
   const cronToHuman = (cron: string) => {
-    // 30 16 * * * = Daily at 4:30 PM
-    if (cron === '30 16 * * *') return 'Daily at 4:30 PM'
+    // 40 16 * * * = Daily at 4:40 PM
+    if (cron === '40 16 * * *') return 'Daily at 4:40 PM IST'
+    if (cron === '30 16 * * *') return 'Daily at 4:30 PM IST'
     return cron
   }
 
