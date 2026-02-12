@@ -16,7 +16,7 @@ import { FiSettings, FiMail, FiCheckCircle, FiAlertCircle, FiClock, FiPlay, FiPa
 import { Loader2 } from 'lucide-react'
 
 const AGENT_ID = '698dad822332705a73b4cbea'
-const SCHEDULE_ID = '698dad87ebe6fd87d1dcc170'
+const SCHEDULE_ID = '698daf7cebe6fd87d1dcc173'
 
 // Theme colors (Heritage Premium)
 const THEME_VARS = {

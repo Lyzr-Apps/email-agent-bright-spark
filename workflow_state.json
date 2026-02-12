@@ -23,15 +23,15 @@
   ],
   "schedules": [
     {
-      "schedule_id": "698dad87ebe6fd87d1dcc170",
+      "schedule_id": "698daf7cebe6fd87d1dcc173",
       "agent_id": "698dad822332705a73b4cbea",
       "agent_name": "Email Task Agent",
       "cron_expression": "30 16 * * *",
-      "timezone": "America/New_York",
+      "timezone": "Asia/Kolkata",
       "message": "Analyze yesterday's emails and send daily task list",
-      "frequency_description": "Daily at 4:30 PM EST",
+      "frequency_description": "Daily at 4:30 PM IST",
       "is_active": true,
-      "next_run_time": "2026-02-12T16:30:00-05:00"
+      "next_run_time": "2026-02-12T16:30:00+05:30"
     }
   ],
   "workflow": {
