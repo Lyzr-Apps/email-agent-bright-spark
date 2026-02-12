@@ -358,7 +358,10 @@ export default function Home() {
         })
       }
     } catch (error) {
-      console.error('Failed to load schedule info:', error)
+      // Silently handle errors during development HMR
+      if (error instanceof Error && error.message !== 'Failed to fetch') {
+        console.error('Failed to load schedule info:', error)
+      }
     }
   }
 
@@ -376,7 +379,10 @@ export default function Home() {
         setScheduleRuns(runs)
       }
     } catch (error) {
-      console.error('Failed to load schedule runs:', error)
+      // Silently handle errors during development HMR
+      if (error instanceof Error && error.message !== 'Failed to fetch') {
+        console.error('Failed to load schedule runs:', error)
+      }
     }
   }
 
