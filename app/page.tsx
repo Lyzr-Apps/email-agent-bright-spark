@@ -483,9 +483,15 @@ export default function Home() {
   }
 
   const formatNextRun = (nextRunString?: string) => {
-    if (!nextRunString) return 'Not scheduled'
+    if (!nextRunString || nextRunString === 'Not scheduled') return 'Not scheduled'
     try {
       const nextRun = new Date(nextRunString)
+
+      // Check if date is valid
+      if (isNaN(nextRun.getTime())) {
+        return 'Not scheduled'
+      }
+
       const now = new Date()
       const diff = nextRun.getTime() - now.getTime()
 
@@ -494,13 +500,18 @@ export default function Home() {
       const hours = Math.floor(diff / (1000 * 60 * 60))
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
 
+      // Ensure we don't display NaN
+      if (isNaN(hours) || isNaN(minutes)) {
+        return 'Not scheduled'
+      }
+
       if (hours > 24) {
         return nextRun.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
       }
 
       return `in ${hours}h ${minutes}m`
     } catch {
-      return nextRunString
+      return 'Not scheduled'
     }
   }
 
@@ -511,7 +522,9 @@ export default function Home() {
   }
 
   const displayTasks = currentTasks?.tasks ?? []
-  const displayEmailsProcessed = currentTasks?.emailsProcessed ?? 0
+  const displayEmailsProcessed = typeof currentTasks?.emailsProcessed === 'number' && !isNaN(currentTasks.emailsProcessed)
+    ? currentTasks.emailsProcessed
+    : 0
   const displayStatus = currentTasks?.status ?? 'ready'
 
   return (
